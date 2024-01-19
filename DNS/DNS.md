@@ -2,7 +2,7 @@
 
 
 
-## Étape 1: Installation du serveur DNS 
+## Étape 1: Installation du serveur DNS (bind)
 - Installez le package dns :
     ```
     sudo apt-get update
