@@ -1,0 +1,1 @@
+This Security project, as part of the academic year 2023-2024 in software engineering, involves the implementation of network authentication and service management, covering technologies like OpenLDAP, SSH, Apache, OpenVPN, DNS, and Kerberos.
