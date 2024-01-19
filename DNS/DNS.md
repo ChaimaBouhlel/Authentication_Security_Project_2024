@@ -1,46 +1,102 @@
-# README : Configuration d'OpenLDAP avec DNS sur un Serveur Linux
+# DNS Server (Bind) Configuration Guide
 
+Ensure your Bind DNS server is installed and running correctly. If not, follow these installation and startup commands:
 
+```bash
+sudo apt-get update
+sudo apt-get install bind9
+sudo systemctl start bind9
+sudo systemctl enable bind9
+cd /etc/bind
+```
 
-## Étape 1: Installation du serveur DNS (bind)
-- Installez le package dns :
-    ```
-    sudo apt-get update
-    sudo apt-get install bind9
-    ```
-- Ouvrez le fichier named.conf.local à l’aide de votre éditeur de texte préféré :
-    ```
-    sudo nano /etc/bind/named.conf.local
-    ```
+Next, check the forwarders in your configuration:
 
-## Étape 2 : Configuration du DNS
-- Ajoutez les détails de votre domaine à named.conf.local :
-    ```
-    zone "projectsec.tn" {
-          type master;
-          file "/etc/bind/db.projectsec.tn";
-    };
-    ```
-- Créez le fichier du domaine :
-    ```
-    sudo cp /etc/bind/db.local /etc/bind/db.projectsec.tn
-    ```
-- Configurez ce fichier avec vos détails de domaine.
+```bash
+sudo nano named.conf.options
+```
 
-- Répétez ce processus avec le fichier db.reverse.tn pour la représentation de l'adresse IP.
+Your forwarders should look something like this:
 
+```bash
+forwarders {
+     192.168.56.102;
+     8.8.8.8;
+};
+```
 
-## Étape 3 : Test du Serveur DNS
-- Utilisez la commande `dig` pour tester la résolution DNS:
-    ```
-    dig @localhost projectsec.tn
-    ```
-- La commande doit renvoyer une réponse avec l'adresse IP que vous avez configurée.
+Now, configure your domain and reverse zones:
 
-## Étape 4 : Test OpenLDAP
-- Utilisez la commande `ldapsearch` pour tester la configuration de l'OpenLDAP :
-   ```
-   ldapsearch -x -H ldap://localhost -b dc=projectsec,dc=tn -LLL "(uid=hamza)"
-   ```
-- 
+```bash
+sudo nano named.conf.local 
+```
 
+Your domain and reverse zones might look like this:
+
+```bash
+zone "insat.tn" {
+    type master;
+    file "/etc/bind/db.insat.tn";
+};
+
+zone "56.168.192.in-addr.arpa" {
+    type master;
+    file "/etc/bind/db.reverse.tn";
+};
+```
+
+You'll also need to add the necessary DNS records for OpenLDAP, Apache, and OpenVPN servers. Begin by generating the `db.insat.tn` file from `db.local`:
+
+```bash
+sudo cp db.local db.insat.tn
+```
+
+Then, edit the `db.insat.tn` file:
+
+```bash
+sudo nano db.insat.tn 
+```
+
+Configuration should somewhat look like this:
+
+```bash
+...
+server  IN A    192.168.56.102
+apache  IN A    192.168.56.102
+```
+
+Update the `db.reverse.tn` file like how you updated the `db.insat.tn`:
+
+```bash
+sudo nano db.reverse.tn
+```
+
+Modify the `/etc/resolv.conf`:
+
+```bash
+sudo nano /etc/resolv.conf
+```
+
+In this file, add your nameserver and domain:
+
+```bash
+nameserver 192.168.56.102
+domain insat.tn
+search insat.tn
+```
+
+## Section 2: Validation and Testing
+
+Perform a DNS resolution test for your configured services. Ensure the DNS server is running:
+
+```bash
+sudo systemctl restart bind9
+sudo systemctl status bind9
+```
+
+Use the `nslookup` command to test DNS resolution:
+
+```bash
+nslookup server.insat.tn
+nslookup apache.insat.tn
+```
