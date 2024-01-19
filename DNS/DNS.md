@@ -2,7 +2,7 @@
 
 
 
-## Étape 1: Installation du serveur DNS (Bind9)
+## Étape 1: Installation du serveur DNS 
 - Installez le package dns :
     ```
     sudo apt-get update
