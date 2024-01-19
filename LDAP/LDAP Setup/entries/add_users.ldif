@@ -1,0 +1,45 @@
+dn: cn=GL,ou=groups,dc=insat,dc=tn
+objectClass: posixGroup
+cn: GL
+gidNumber: 6001
+memberUid: hamza.ben.ammar
+
+# Group: RT
+dn: cn=RT,ou=groups,dc=insat,dc=tn
+objectClass: posixGroup
+cn: RT
+gidNumber: 6002
+memberUid: emna.gaidi
+
+# Add users
+dn: uid=hamza.ben.ammar,ou=users,dc=insat,dc=tn
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: posixAccount
+uidNumber: 10000
+gidNumber: 6001
+homeDirectory: /home/hamza
+loginShell: /bin/bash
+uid: hamza.ben.ammar
+sn: hamzus
+cn: hamza ben ammar
+mail: hamza.benammar@insat.ucar.tn
+userPassword: {SSHA}vNu5EKeTE4+Zi3yWBzjVHoouoJkvjVPW
+
+dn: uid=emna.gaidi,ou=users,dc=insat,dc=tn
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+objectClass: posixAccount
+uidNumber: 10001
+gidNumber: 6002
+homeDirectory: /home/emna
+loginShell: /bin/bash
+uid: emna.gaidi
+sn: yemna
+cn: emna gaidi
+mail: emna.gaidi@insat.ucar.tn
+userPassword: {SSHA}nNP9VU6T99SslgStKORqKc6RXiz8KiW2
